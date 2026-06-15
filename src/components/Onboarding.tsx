@@ -1,4 +1,4 @@
-import { DOMAINS } from "../domains";
+import { DOMAINS, domainName } from "../domains";
 import { t } from "../i18n";
 import type { Lang } from "../types";
 
@@ -55,7 +55,7 @@ export default function Onboarding({ lang, onLang, onDone }: Props) {
             {DOMAINS.map((d) => (
               <span
                 key={d.id}
-                title={lang === "fr" ? d.fr : d.en}
+                title={domainName(d, lang)}
                 className="inline-flex h-9 w-9 items-center justify-center rounded-full border border-gold/20 text-base text-vellum-dim"
               >
                 {d.emblem}

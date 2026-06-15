@@ -8,7 +8,9 @@ import {
   ACCENT_CLASS,
   DOMAINS,
   DOMAIN_MAP,
+  domainBlurb,
   domainForDay,
+  domainName,
   todayDayIndex,
   type DomainId,
 } from "./domains";
@@ -102,7 +104,7 @@ export default function App() {
             aria-label="Le Régal"
           >
             <span className="eyebrow text-[0.55rem] text-gold-dim">
-              {DOMAIN_MAP[todayDomain] && (lang === "fr" ? "le cabinet du jour" : "today's cabinet")}
+              {DOMAIN_MAP[todayDomain] && t("todaysCabinet", lang)}
             </span>
             <h1 className="font-display text-3xl font-semibold leading-none text-vellum transition group-hover:text-gold-leaf sm:text-4xl">
               Le Régal
@@ -186,7 +188,7 @@ export default function App() {
             {picker && !loading && (
               <div className="animate-fadeIn mt-5 rounded-2xl border border-gold/15 bg-night-raised/60 p-4">
                 <p className="eyebrow mb-3 text-center text-[0.58rem] text-gold-dim">
-                  {lang === "fr" ? "un régal de…" : "a régal of…"}
+                  {t("aRegalOf", lang)}
                 </p>
                 <div className="grid grid-cols-2 gap-2 sm:grid-cols-3">
                   {DOMAINS.map((d) => (
@@ -203,7 +205,7 @@ export default function App() {
                       >
                         {d.emblem}
                       </span>
-                      {lang === "fr" ? d.fr : d.en}
+                      {domainName(d, lang)}
                     </button>
                   ))}
                 </div>
@@ -239,10 +241,10 @@ function Hero({
       </div>
       <p className="eyebrow text-[0.6rem] text-gold-dim">{t("todaysRegal", lang)}</p>
       <h2 className="mt-2 font-display text-4xl font-medium text-vellum sm:text-5xl">
-        {lang === "fr" ? d.fr : d.en}
+        {domainName(d, lang)}
       </h2>
       <p className="mx-auto mt-3 max-w-xs font-body text-sm text-vellum-dim">
-        {d.blurbFr}
+        {domainBlurb(d, lang)}
       </p>
       <button
         onClick={onServe}

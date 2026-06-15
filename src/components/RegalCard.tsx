@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { ACCENT_CLASS, DOMAIN_MAP } from "../domains";
+import { ACCENT_CLASS, DOMAIN_MAP, domainName } from "../domains";
 import { isInCabinet, removeFromCabinet, regalId, saveToCabinet } from "../db";
 import { t } from "../i18n";
 import type { Lang, Regal } from "../types";
@@ -56,7 +56,7 @@ export default function RegalCard({ regal, lang, saveable = true }: Props) {
             className="eyebrow text-[0.62rem]"
             style={{ color: accent.hex }}
           >
-            {lang === "fr" ? d.fr : d.en}
+            {domainName(d, lang)}
           </span>
           <span className="h-px flex-1" style={{ background: `${accent.hex}40` }} />
           <span className="text-lg" style={{ color: accent.hex }} aria-hidden="true">

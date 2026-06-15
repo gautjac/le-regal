@@ -1,6 +1,8 @@
 // The ten domains of Le Régal — Jac's whole world, cycling through.
 // Each domain carries an emblem, an accent colour token, and FR/EN labels.
 
+import type { Lang } from "./types";
+
 export type DomainId =
   | "peinture"
   | "musique"
@@ -21,6 +23,8 @@ export interface Domain {
   en: string;
   /** one-line FR descriptor of what a régal from this domain is */
   blurbFr: string;
+  /** one-line EN descriptor of what a régal from this domain is */
+  blurbEn: string;
   /** tailwind colour token suffix → domaine.<accent> */
   accent: string;
   /** a single glyph emblem */
@@ -33,6 +37,7 @@ export const DOMAINS: Domain[] = [
     fr: "Peinture",
     en: "Painting",
     blurbFr: "un détail d'un tableau",
+    blurbEn: "a detail of a painting",
     accent: "peinture",
     emblem: "❖",
   },
@@ -41,6 +46,7 @@ export const DOMAINS: Domain[] = [
     fr: "Musique",
     en: "Music",
     blurbFr: "huit mesures de musique",
+    blurbEn: "eight bars of music",
     accent: "musique",
     emblem: "♪",
   },
@@ -49,6 +55,7 @@ export const DOMAINS: Domain[] = [
     fr: "La phrase",
     en: "The sentence",
     blurbFr: "une seule phrase parfaite",
+    blurbEn: "one perfect sentence",
     accent: "phrase",
     emblem: "❝",
   },
@@ -57,6 +64,7 @@ export const DOMAINS: Domain[] = [
     fr: "Échecs",
     en: "Chess",
     blurbFr: "un coup d'échecs",
+    blurbEn: "a chess move",
     accent: "echecs",
     emblem: "♞",
   },
@@ -65,6 +73,7 @@ export const DOMAINS: Domain[] = [
     fr: "Poésie",
     en: "Poetry",
     blurbFr: "un vers",
+    blurbEn: "a single line of verse",
     accent: "poesie",
     emblem: "✶",
   },
@@ -73,6 +82,7 @@ export const DOMAINS: Domain[] = [
     fr: "Cinéma",
     en: "Cinema",
     blurbFr: "un plan de film",
+    blurbEn: "a single film shot",
     accent: "cinema",
     emblem: "◐",
   },
@@ -81,6 +91,7 @@ export const DOMAINS: Domain[] = [
     fr: "Danse",
     en: "Dance",
     blurbFr: "une phrase de danse",
+    blurbEn: "a phrase of dance",
     accent: "danse",
     emblem: "❧",
   },
@@ -89,6 +100,7 @@ export const DOMAINS: Domain[] = [
     fr: "Architecture",
     en: "Architecture",
     blurbFr: "un bâtiment",
+    blurbEn: "a building, or one element of it",
     accent: "architecture",
     emblem: "⌂",
   },
@@ -97,6 +109,7 @@ export const DOMAINS: Domain[] = [
     fr: "Science",
     en: "Science",
     blurbFr: "une idée scientifique",
+    blurbEn: "an elegant scientific idea",
     accent: "science",
     emblem: "✷",
   },
@@ -105,6 +118,7 @@ export const DOMAINS: Domain[] = [
     fr: "Cuisine",
     en: "Cuisine",
     blurbFr: "un accord culinaire",
+    blurbEn: "a culinary pairing",
     accent: "cuisine",
     emblem: "✿",
   },
@@ -115,6 +129,18 @@ export const DOMAIN_MAP: Record<DomainId, Domain> = Object.fromEntries(
 ) as Record<DomainId, Domain>;
 
 export const DOMAIN_IDS: DomainId[] = DOMAINS.map((d) => d.id);
+
+/** Localized domain name. Accepts a Domain or a DomainId. */
+export function domainName(d: Domain | DomainId, lang: Lang): string {
+  const dom = typeof d === "string" ? DOMAIN_MAP[d] : d;
+  return lang === "fr" ? dom.fr : dom.en;
+}
+
+/** Localized one-line descriptor of what a régal from this domain is. */
+export function domainBlurb(d: Domain | DomainId, lang: Lang): string {
+  const dom = typeof d === "string" ? DOMAIN_MAP[d] : d;
+  return lang === "fr" ? dom.blurbFr : dom.blurbEn;
+}
 
 /** Tailwind class fragments per domain accent (avoids dynamic class purging). */
 export const ACCENT_CLASS: Record<

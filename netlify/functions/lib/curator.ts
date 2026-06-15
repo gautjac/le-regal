@@ -87,6 +87,23 @@ const DOMAIN_FR: Record<DomainId, string> = {
   cuisine: "cuisine",
 };
 
+const DOMAIN_EN: Record<DomainId, string> = {
+  peinture: "painting",
+  musique: "music",
+  phrase: "the sentence",
+  echecs: "chess",
+  poesie: "poetry",
+  cinema: "cinema",
+  danse: "dance",
+  architecture: "architecture",
+  science: "science",
+  cuisine: "cuisine",
+};
+
+function domainLabel(domain: DomainId, lang: Lang): string {
+  return lang === "fr" ? DOMAIN_FR[domain] : DOMAIN_EN[domain];
+}
+
 const SYSTEM_BASE = `You are the curator of «Le Régal», a daily cabinet of wonders made for a Québécois filmmaker and musician with a sharp, curious eye. Each day you serve ONE exquisite small thing from one domain — and, crucially, you explain WHY it is exceptional in a tight, specific way that teaches the eye and ear.
 
 THE NON-NEGOTIABLE HONESTY RULE:
@@ -170,7 +187,7 @@ export async function curate(req: RegalRequest): Promise<Regal> {
   const avoid = (req.avoid ?? []).filter(Boolean).slice(0, 60);
 
   const userText = [
-    `TODAY'S DOMAIN: ${domain} — ${lang === "fr" ? DOMAIN_FR[domain] : domain}.`,
+    `TODAY'S DOMAIN: ${domain} — ${domainLabel(domain, lang)}.`,
     "",
     "WHAT A RÉGAL FROM THIS DOMAIN IS:",
     brief,

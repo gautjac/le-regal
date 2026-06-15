@@ -23,6 +23,8 @@ const T: Dict = {
     en: "Your cabinet of curiosities — the régals you loved.",
   },
   home: { fr: "Le jour", en: "Today" },
+  todaysCabinet: { fr: "le cabinet du jour", en: "today's cabinet" },
+  aRegalOf: { fr: "un régal de…", en: "a régal of…" },
   searchCabinet: {
     fr: "Chercher par titre, domaine ou geste…",
     en: "Search by title, domain or move…",

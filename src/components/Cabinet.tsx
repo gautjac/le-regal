@@ -5,6 +5,7 @@ import {
   ACCENT_CLASS,
   DOMAINS,
   DOMAIN_MAP,
+  domainName,
   type DomainId,
 } from "../domains";
 import { t } from "../i18n";
@@ -90,7 +91,7 @@ export default function Cabinet({ lang }: Props) {
               key={d.id}
               active={filter === d.id}
               onClick={() => setFilter(d.id)}
-              label={`${d.emblem} ${lang === "fr" ? d.fr : d.en}`}
+              label={`${d.emblem} ${domainName(d, lang)}`}
               hex={ACCENT_CLASS[d.id].hex}
             />
           ))}
@@ -180,7 +181,7 @@ function CabinetItem({
             className="eyebrow block text-[0.55rem]"
             style={{ color: accent.hex }}
           >
-            {lang === "fr" ? d.fr : d.en}
+            {domainName(d, lang)}
           </span>
           <span className="mt-0.5 block truncate font-display text-xl font-semibold text-vellum">
             {regal.title}
