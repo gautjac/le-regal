@@ -19,6 +19,38 @@
   </head>
   <body>
     <div id="root"></div>
+    <!-- Daily-app open beacon: records that this app was opened today in the
+         dashboard's Firestore (charlotte-dashboard / daily_apps/<id>) so opens
+         are tracked no matter how the app was reached. Fire-and-forget; never
+         blocks the UI, and any failure is swallowed. -->
+    <script>
+      (function () {
+        try {
+          var APP_ID = 'regal';
+          var KEY = 'AIzaSyC2xUjWzIU35j_frmg6yI-JigW8ehKZVKQ';
+          var DOC = 'https://firestore.googleapis.com/v1/projects/charlotte-dashboard' +
+            '/databases/(default)/documents/daily_apps/' + APP_ID;
+          var today = new Date().toLocaleDateString('en-CA', { timeZone: 'America/Moncton' });
+          fetch(DOC + '?key=' + KEY)
+            .then(function (r) { return r.ok ? r.json() : null; })
+            .then(function (doc) {
+              var arr = doc && doc.fields && doc.fields.openedDates &&
+                doc.fields.openedDates.arrayValue && doc.fields.openedDates.arrayValue.values;
+              var dates = (arr || []).map(function (v) { return v.stringValue; });
+              if (dates.indexOf(today) !== -1) return; // already counted today
+              dates.push(today);
+              return fetch(DOC + '?key=' + KEY + '&updateMask.fieldPaths=openedDates', {
+                method: 'PATCH',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ fields: { openedDates: { arrayValue: { values:
+                  dates.map(function (d) { return { stringValue: d }; }) } } } }),
+                keepalive: true
+              });
+            })
+            .catch(function () {});
+        } catch (e) {}
+      })();
+    </script>
     <script type="module" src="/src/main.tsx"></script>
   </body>
 </html>
