@@ -10,6 +10,7 @@ import {
 } from "../domains";
 import { t } from "../i18n";
 import type { Lang, SavedRegal } from "../types";
+import MediaEmbed from "./MediaEmbed";
 
 interface Props {
   lang: Lang;
@@ -213,6 +214,8 @@ function CabinetItem({
           <p className="font-body text-[0.97rem] leading-relaxed text-vellum/90">
             {regal.theThing}
           </p>
+
+          <MediaEmbed regal={regal} lang={lang} compact />
 
           <p className="eyebrow mb-1.5 mt-4 text-[0.55rem] text-gold-leaf">
             ✦ {t("pourquoi", lang)}

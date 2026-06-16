@@ -3,6 +3,7 @@ import { ACCENT_CLASS, DOMAIN_MAP, domainName } from "../domains";
 import { isInCabinet, removeFromCabinet, regalId, saveToCabinet } from "../db";
 import { t } from "../i18n";
 import type { Lang, Regal } from "../types";
+import MediaEmbed from "./MediaEmbed";
 
 interface Props {
   regal: Regal;
@@ -73,6 +74,9 @@ export default function RegalCard({ regal, lang, saveable = true }: Props) {
             {regal.attribution}
           </p>
         )}
+
+        {/* the actual work — image for visual domains, a real link for audio/motion */}
+        <MediaEmbed regal={regal} lang={lang} />
 
         <div className="rule-gold my-6" />
 

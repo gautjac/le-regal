@@ -46,6 +46,13 @@ const T: Dict = {
   retry: { fr: "Réessayer", en: "Retry" },
   savedAt: { fr: "Gardé le", en: "Kept on" },
   count: { fr: "régals", en: "régals" },
+  // media
+  listenYouTube: { fr: "Écouter sur YouTube", en: "Listen on YouTube" },
+  watchYouTube: { fr: "Regarder sur YouTube", en: "Watch on YouTube" },
+  viewSource: { fr: "Voir sur Wikipédia", en: "View on Wikipedia" },
+  seeImage: { fr: "Voir l'image", en: "See the image" },
+  learnMore: { fr: "En savoir plus", en: "Learn more" },
+  imageCredit: { fr: "Image : Wikimédia", en: "Image: Wikimedia" },
   // onboarding
   obTitle: { fr: "Bienvenue au Régal", en: "Welcome to Le Régal" },
   obP1: {

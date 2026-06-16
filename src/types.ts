@@ -16,6 +16,13 @@ export interface Regal {
   pourquoi: string;
   /** «Le geste» — the one transferable move, named in a phrase. */
   geste: string;
+  /**
+   * Optional SEARCH STRING (keywords only — never a URL) that locates this
+   * exact work on Wikipedia / YouTube, e.g. "Las Meninas Velázquez". Used by
+   * the client to embed a real image or a real listening/viewing link. The
+   * curator only ever emits keywords here — never an invented URL.
+   */
+  mediaQuery?: string;
 }
 
 /** A régal saved by the user into the cabinet. */

@@ -48,6 +48,8 @@ export interface Regal {
   theThing: string;
   pourquoi: string;
   geste: string;
+  /** keywords only (never a URL) to locate the work — see schema/system prompt */
+  mediaQuery?: string;
 }
 
 // What a régal from each domain SHOULD be — keeps the model concrete & honest.
@@ -118,6 +120,11 @@ WHAT MAKES A GREAT RÉGAL — the «pourquoi» is the signature:
 - «pourquoi»: the heart. A tight ~60-second explanation (roughly 70–130 words) of what makes it exceptional — the specific craft move, the decision, the constraint overcome, the transferable insight. Be precise and earned: name the technique, the tension, the why. No vague praise ("beautiful", "iconic", "masterful") without the mechanism behind it. Teach something the reader can carry to their own work.
 - «geste»: the ONE transferable move, named in a short phrase (a maxim a maker could pin above their desk). E.g. "Laisser le vide porter le poids." / "Let the silence do the work."
 
+LOCATING THE WORK — «mediaQuery»:
+- When the régal is a locatable work (a painting, a building, a film, a musical piece, a recording, a choreography), ALSO provide «mediaQuery»: a few KEYWORDS — the work's consecrated title plus its creator — that will reliably surface it on Wikipedia or YouTube. E.g. "Las Meninas Velázquez", "J.S. Bach Goldberg Variations Aria BWV 988", "Pina Bausch Café Müller", "Fallingwater Frank Lloyd Wright".
+- KEYWORDS ONLY. NEVER a URL, never a guessed link — the app resolves the real media itself from these keywords. Inventing a URL breaks the honesty rule.
+- Omit «mediaQuery» for domains/régals with no single locatable work to point at (a bare sentence, a poetry line, an abstract scientific idea, a culinary principle) — there the words alone are the régal.
+
 VOICE: cultured, warm, exact — a brilliant friend showing you one thing across a table, not a museum placard. Sentences with rhythm. Never gushing, never academic-dry.
 
 Respond ONLY by calling report_regal with accurate, real content.`;
@@ -162,6 +169,11 @@ const TOOL: Anthropic.Tool = {
         type: "string",
         description:
           "«Le geste» — the single transferable move, as one pinnable phrase (max ~10 words).",
+      },
+      mediaQuery: {
+        type: "string",
+        description:
+          "Optional. KEYWORDS ONLY (never a URL) to locate this exact work on Wikipedia / YouTube: its consecrated title + creator, e.g. 'Las Meninas Velázquez', 'J.S. Bach Goldberg Variations Aria BWV 988', 'Pina Bausch Café Müller', 'Fallingwater Frank Lloyd Wright'. Provide for paintings, buildings, films, musical pieces/recordings and choreographies so the app can embed a real image or listening link. Omit when there is no single locatable work (a bare sentence, a poetry line, an abstract idea, a culinary principle).",
       },
     },
   },
@@ -227,6 +239,9 @@ export async function curate(req: RegalRequest): Promise<Regal> {
   const theThing = clamp(raw.theThing, 1400);
   const pourquoi = clamp(raw.pourquoi, 1800);
   const geste = clamp(raw.geste, 200);
+  // keywords only — defensively strip anything URL-shaped the model might emit
+  let mediaQuery = clamp(raw.mediaQuery, 160);
+  if (/https?:\/\/|www\.|\.\w{2,}\//i.test(mediaQuery)) mediaQuery = "";
 
   if (!title || !theThing || !pourquoi) {
     throw new Error(
@@ -243,5 +258,6 @@ export async function curate(req: RegalRequest): Promise<Regal> {
     theThing,
     pourquoi,
     geste,
+    ...(mediaQuery ? { mediaQuery } : {}),
   };
 }
