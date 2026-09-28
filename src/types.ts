@@ -52,4 +52,6 @@ export interface Settings {
   lang: Lang;
   /** the day index for which we last served the daily régal */
   lastServedDay?: number;
+  /** the régal served that day — a same-day reload shows it instead of re-fetching */
+  lastServed?: Regal;
 }

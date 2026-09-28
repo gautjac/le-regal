@@ -14,6 +14,7 @@ import {
   todayDayIndex,
   type DomainId,
 } from "./domains";
+import { servedToday } from "./daily";
 import { getSettings, markSeen, recentTitles, setSettings } from "./db";
 import { t } from "./i18n";
 import type { Lang, Regal, Settings } from "./types";
@@ -54,7 +55,7 @@ export default function App() {
         const r = await fetchRegal({ domain, lang, avoid });
         setRegal(r);
         await markSeen(r);
-        await setSettings({ lastServedDay: todayDayIndex() });
+        await setSettings({ lastServedDay: todayDayIndex(), lastServed: r });
       } catch (e) {
         setError(e instanceof Error ? e.message : String(e));
       } finally {
@@ -65,10 +66,13 @@ export default function App() {
     [lang],
   );
 
-  // auto-serve today's régal once onboarded & nothing shown yet
+  // auto-serve today's régal once onboarded & nothing shown yet — reusing the
+  // one already served today, so a reload doesn't spend another Opus call
   useEffect(() => {
     if (!settings || !settings.onboarded || regal || loading || error) return;
-    serve("any");
+    const served = servedToday(settings, todayDayIndex());
+    if (served) setRegal(served);
+    else serve("any");
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [settings?.onboarded]);
 
