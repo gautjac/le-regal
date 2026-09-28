@@ -218,12 +218,18 @@ export async function curate(req: RegalRequest): Promise<Regal> {
   const res = await client().messages.create({
     model: MODEL,
     max_tokens: 1600,
-    temperature: 1,
-    system: systemFor(lang),
+    // Tools + system are the same for every régal in a language — every reload,
+    // re-roll and visitor — so they are cached; the domain and the avoid list
+    // stay in the user turn, after the breakpoint.
+    system: [{ type: "text", text: systemFor(lang), cache_control: { type: "ephemeral" } }],
     messages: [{ role: "user", content: userText }],
     tools: [TOOL],
     tool_choice: { type: "tool", name: "report_regal" },
   });
+  const u = res.usage;
+  console.log(
+    `[le-regal] curate ${domain}: input=${u.input_tokens} cache_read=${u.cache_read_input_tokens ?? 0} cache_write=${u.cache_creation_input_tokens ?? 0} output=${u.output_tokens}`,
+  );
 
   const tool = res.content.find((b) => b.type === "tool_use");
   if (!tool || tool.type !== "tool_use") {
